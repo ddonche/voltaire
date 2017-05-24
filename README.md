@@ -70,14 +70,12 @@ _comments_controller.rb_:
 ```ruby
 def upvote
   @comment.upvote_by current_user
-
   voltaire_up(1, :karma, @comment.user_id)
   redirect_to :back
 end
 
 def downvote
   @comment.downvote_by current_user
-
   voltaire_down(1, :karma, @comment.user_id)
   redirect_to :back
 end
@@ -107,14 +105,13 @@ _images_controller.rb_:
 def toggle_feature
   if @image.standard?
     @image.featured!
-  
     voltaire_up(20, :reputation, @image.user_id)
     
   elsif @image.featured?
     @image.standard!
-  
     voltaire_down(20, :reputation, @image.user_id)
   end
+  
   redirect_to image_path(@image), notice: 'Image status has been updated.'
 end
 ```
