@@ -61,23 +61,23 @@ To implement it, simply call the method you want in your controller and pass in 
 ## Examples
 
 Here is an implementation of the [acts_as_votable](https://github.com/ryanto/acts_as_votable) gem, which allows users to upvote or downvote blog posts. In the blog_controller.rb
-file, we pass in our method where we want Voltaire to go to town. In the example below, when a user upvotes a blog post, the 
-user who created the blog post will have their _karma_ increase by 1, as karma is the database column in this example. 
+file, we pass in our method where we want Voltaire to go to town. In the example below, when a user upvotes a comment, the 
+user who made the comment will have their _karma_ increase by 1, as karma is the database column in this example. 
 
 _blogs_controller.rb_:
 
 ```ruby
 def upvote
-  @blog.upvote_by current_user
+  @comment.upvote_by current_user
 
-  voltaire_up(1, :karma, @blog.user_id)
+  voltaire_up(1, :karma, @comment.user_id)
   redirect_to :back
 end
 
 def downvote
-  @glip.downvote_by current_user
+  @comment.downvote_by current_user
 
-  voltaire_down(1, :karma, @blog.user_id)
+  voltaire_down(1, :karma, @comment.user_id)
   redirect_to :back
 end
 ```
@@ -97,24 +97,24 @@ _index.html.erb_:
 ```
 
 ## One More Example
-Here we have set up an easy way to toggle an article and make it featured. Any time a user's article gets featured, we have
-Voltaire increase their _reputation_ by 15 points. 
+Here we have set up an easy way to toggle an image and make it featured. Any time a user's image gets featured, we have
+Voltaire increase their _reputation_ by 20 points. 
 
-_articles_controller.rb_:
+_images_controller.rb_:
 
 ```ruby
 def toggle_feature
-  if @article.standard?
-    @article.featured!
+  if @image.standard?
+    @image.featured!
   
-    voltaire_up(15, :reputation, @article.user_id)
+    voltaire_up(20, :reputation, @image.user_id)
     
-  elsif @article.featured?
-    @article.standard!
+  elsif @image.featured?
+    @image.standard!
   
-    voltaire_down(15, :reputation, @article.user_id)
+    voltaire_down(20, :reputation, @image.user_id)
   end
-  redirect_to article_path(@article), notice: 'Article status has been updated.'
+  redirect_to image_path(@image), notice: 'Image status has been updated.'
 end
 ```
 
