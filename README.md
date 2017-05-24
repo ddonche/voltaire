@@ -65,7 +65,7 @@ upvote or downvote comments. In the comments_controller.rb file, we pass in our 
 town. In the example below, when a user upvotes a comment, the user who made the comment will have their _karma_ increase 
 by 1, as karma is the database column in this example. 
 
-_comments_controller.rb_:
+_comments_controller.rb_
 
 ```ruby
 def upvote
@@ -88,31 +88,49 @@ the above steps as needed.
 
 Display the user's reputation wherever you want in any view:
 
-_index.html.erb_:
+_index.html.erb_
 
 ```ruby
 <%= link_to blog.user.username, user_path(blog.user) %><br />
 <%= blog.user.reputation %>
 ```
 
-## One More Example
-Here we have set up an easy way to toggle an image and make it featured. Any time a user's image gets featured, we have
+## More Examples
+Here we have set up an easy way to toggle an article and make it featured. Any time a user's article gets featured, we have
 Voltaire increase their _reputation_ by 20 points. 
 
-_images_controller.rb_:
+_articles_controller.rb_
 
 ```ruby
 def toggle_feature
-  if @image.standard?
-    @image.featured!
-    voltaire_up(20, :reputation, @image.user_id)
+  if @article.standard?
+    @article.featured!
+    voltaire_up(20, :reputation, @article.user_id)
     
-  elsif @image.featured?
-    @image.standard!
-    voltaire_down(20, :reputation, @image.user_id)
+  elsif @article.featured?
+    @article.standard!
+    voltaire_down(20, :reputation, @article.user_id)
   end
   
-  redirect_to image_path(@image), notice: 'Image status has been updated.'
+  redirect_to article_path(@article), notice: 'Article status has been updated.'
+end
+```
+
+Or maybe you want to reward a user with _points_ for posting a new image. 
+
+_images_controller.rb_
+```ruby
+def create
+  @image = current_user.images.build(image_params)
+
+  respond_to do |format|
+    if @image.save
+      voltaire_up(10, :points, @image.user_id)
+      format.html { redirect_to @image, notice: 'Image was a success!' }
+    else
+      format.html { render :new }
+    end
+  end
 end
 ```
 
