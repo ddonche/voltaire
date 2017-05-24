@@ -60,8 +60,11 @@ To implement it, simply call the method you want in your controller and pass in 
 
 ## Examples
 
-Here is an implementation of the acts_as_votable gem, which allows users to upvote or downvote blog posts. In the blog_controller.rb
-file, we pass in our method where we want Voltaire to go to town:
+Here is an implementation of the [acts_as_votable](https://github.com/ryanto/acts_as_votable) gem, which allows users to upvote or downvote blog posts. In the blog_controller.rb
+file, we pass in our method where we want Voltaire to go to town. In the example below, when a user upvotes a blog post, the 
+user who created the blog post will have their reputation increase by 1. Same for downvote. 
+
+In _blogs_controller.rb_:
 
 ```ruby
   def upvote
@@ -87,6 +90,8 @@ an overall user reputation, but you want to implement a separate reputation for 
 the above steps as needed. 
 
 Display the user's reputation wherever you want in any view:
+
+In _index.html.erb_:
 
 ```ruby
 <%= link_to blog.user.username, user_path(blog.user) %><br />
