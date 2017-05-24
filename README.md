@@ -60,11 +60,12 @@ To implement it, simply call the method you want in your controller and pass in 
 
 ## Examples
 
-Here is an implementation of the [acts_as_votable](https://github.com/ryanto/acts_as_votable) gem, which allows users to upvote or downvote blog posts. In the blog_controller.rb
-file, we pass in our method where we want Voltaire to go to town. In the example below, when a user upvotes a comment, the 
-user who made the comment will have their _karma_ increase by 1, as karma is the database column in this example. 
+Here is an implementation of the [acts_as_votable](https://github.com/ryanto/acts_as_votable) gem, which allows users to 
+upvote or downvote comments. In the comments_controller.rb file, we pass in our method where we want Voltaire to go to 
+town. In the example below, when a user upvotes a comment, the user who made the comment will have their _karma_ increase 
+by 1, as karma is the database column in this example. 
 
-_blogs_controller.rb_:
+_comments_controller.rb_:
 
 ```ruby
 def upvote
