@@ -13,3 +13,9 @@ module Voltaire
     end
   end
 end
+
+if defined? ActionController::Base
+  ActionController::Base.class_eval do
+    include Voltaire
+  end
+end
