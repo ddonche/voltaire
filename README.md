@@ -11,7 +11,7 @@ All you have to do is add a column for reputation in your users table and let Vo
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'voltaire', '~> 0.1.0'
+gem 'voltaire', '~> 0.2.0'
 ```
 
 And then execute:
