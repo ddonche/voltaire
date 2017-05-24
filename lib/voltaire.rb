@@ -1,17 +1,15 @@
 require "voltaire/version"
 
 module Voltaire
-  class Reputation  
-    def voltaire_up(amount, reputation, user)
-      amount.times.collect do
-        User.increment_counter(reputation, user)
-      end
+  def self.voltaire_up(amount, reputation, user)
+    amount.times.collect do
+      User.increment_counter(reputation, user)
     end
-    
-    def voltaire_down(amount, reputation, user)
-      amount.times.collect do
-        User.decrement_counter(reputation, user)
-      end
+  end
+  
+  def self.voltaire_down(amount, reputation, user)
+    amount.times.collect do
+      User.decrement_counter(reputation, user)
     end
   end
 end
