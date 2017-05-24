@@ -86,6 +86,7 @@ have several columns in various tables, so you can track different reputations a
 an overall user reputation, but you want to implement a separate reputation for user activity inside a group. Simply repeat
 the above steps as needed. 
 
+## Displaying Reputation 
 Display the user's reputation wherever you want in any view:
 
 _index.html.erb_
