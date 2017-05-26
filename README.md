@@ -2,7 +2,8 @@
 > A witty quote proves nothing. - Voltaire
 
 Voltaire provides a very simple way to manage user reputation points. It lets you increase or decrease reputation 
-(points, level, whatever you want to call it in your app) as needed, whenever.
+(points, level, whatever you want to call it in your app) as needed, whenever. It is intended to be extremely light-weight,
+when all you want to track is some kind of points system and nothing else. 
 
 All you have to do is add a column for reputation in your users table and let Voltaire do the rest.
 
@@ -11,7 +12,7 @@ All you have to do is add a column for reputation in your users table and let Vo
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'voltaire', '~> 0.2.0'
+gem 'voltaire', '~> 0.3.0'
 ```
 
 And then execute:
@@ -43,8 +44,11 @@ rails db:migrate
 ## Implementing Voltaire's Powerful Mechanism
 
 Now you're ready to roll. Voltaire has two methods you can call to increase or decrease the user's reputation score.
-It requires three arguments: amount (the amount you want to increase or decrease by), reputation (the database column 
-you want to alter), and user (the user whose reputation will be increased).
+It requires 3 arguments: amount (the amount you want to increase or decrease by), reputation (the database column 
+you want to alter), and user (the user or item whose points will be increased).
+
+_Note: if you are using any model other than users, you will need to use the_ ```voltaire_up_other``` and ```voltaire_down_other``` _methods_ 
+_(instructions farther down)._
 
 The two methods are
 
@@ -134,6 +138,38 @@ def create
   end
 end
 ```
+
+## Something Besides Users
+If you want to implement a score system on some other than users, you will need to pass that in to the method as a fourth parameter.
+In the example below, there is a World class for an app that helps writers create new worlds. If we implement a scoring 
+system on the world, we can easily see which ones are more fleshed out. The methods in this case will look like this:
+
+```ruby
+voltaire_up_other(amount, reputation, user, other)
+  
+voltaire_down_other(amount, reputation, user, other)
+```
+
+The fourth parameter, other, indicates the class. In this case, it would be ```World```. _This parameter needs to be uppercase._
+
+```ruby
+  def create
+    @city = City.new(city_params)
+    @city.user = current_user
+
+    respond_to do |format|
+      if @city.save
+        voltaire_up_other(1, :score, @city.world_id, World)
+        format.html { redirect_to @city, notice: 'City was successfully created.' }
+      else
+        format.html { render :new }
+      end
+    end
+  end
+```
+
+Now, the author can easily see which of their worlds (characters, locations, etc.) are more developed, vs. ones that may need more work.
+(Maybe they also compete with other authors to get their creations more points.)
 
 ## Development
 
