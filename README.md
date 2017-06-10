@@ -139,7 +139,7 @@ def create
 end
 ```
 
-## Something Besides Users
+# Something Besides Users
 If you want to implement a score system on some other than users, you will need to pass that in to the method as a fourth parameter.
 In the example below, there is a World class for an app that helps writers create new worlds. If we implement a scoring 
 system on the world, we can easily see which ones are more fleshed out. The methods in this case will look like this:
