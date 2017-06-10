@@ -3,19 +3,19 @@ require "voltaire/version"
 module Voltaire
   # FOR MORE THAN INCREMENTING BY 1
   def voltaire_up(amount, reputation, user)
-    User.update_attributes(reputation + amount, user)
+    User.update_attributes((reputation + amount), user)
   end
   
   def voltaire_down(amount, reputation, user)
-    User.update_attributes(reputation - amount, user)
+    User.update_attributes((reputation - amount), user)
   end
   
   def voltaire_up_other(amount, reputation, user, other)
-    other.update_attributes(reputation + amount, user)
+    other.update_attributes((reputation + amount), user)
   end
     
   def voltaire_down_other(amount, reputation, user, other)
-    other.update_attributes(reputation - amount, user)
+    other.update_attributes((reputation - amount), user)
   end
   
   # FOR INCREMENTING
