@@ -54,8 +54,7 @@ To recap:
 - incrementing and decrementing by 1 or a small number, use the _plus_ or _minus_ methods below; _this way guards against concurrency_
 - increasing and decreasing by larger amounts for rarer actions or if you don't care about concurrency, user _up_ and _down_ methods below
 
-Whichever of the two ways you decide to use, the parameters are the same:
-Each method takes 3 arguments: 
+Whichever of the two ways you decide to use, the parameters are the same. Each method takes 3 arguments: 
 * _amount_ (the amount you want to increase or decrease by)
 * _reputation_ (the database column you want to alter)
 * _user_ (the user or item whose points will be increased)
@@ -76,7 +75,7 @@ and
 voltaire_down(amount, reputation, user)
 ```
 
-##Increments/Decrements of 1 or Smaller Amounts
+## Increments/Decrements of 1 or Smaller Amounts
 Use ```voltaire_plus``` and ```voltaire_minus``` methods for smaller amounts or if have concurrency issues. These will hit the database
 multiple times.
 
@@ -89,7 +88,7 @@ and
 voltaire_minus(amount, reputation, user)
 ```
 
-#Implementation and Examples
+# Implementation and Examples
 To implement it, simply call the method you want in your controller and pass in the parameters. 
 
 ## Examples
