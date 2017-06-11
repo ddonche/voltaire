@@ -51,8 +51,8 @@ methods, the record is updated by 1 for whatever amount you specify, so if you p
 something, the database will be hit 100 times. For larger amounts, use the up/down methods instead._
 
 To recap:
-*incrementing and decrementing by 1 or a small number, use the _plus_ or _minus_ methods below; _this way guards against concurrency_
-*increasing and decreasing by larger amounts for rarer actions or if you don't care about concurrency, user _up_ and _down_ methods below
+-incrementing and decrementing by 1 or a small number, use the _plus_ or _minus_ methods below; _this way guards against concurrency_
+-increasing and decreasing by larger amounts for rarer actions or if you don't care about concurrency, user _up_ and _down_ methods below
 
 Whichever of the two ways you decide to use, the parameters are the same:
 Each method takes 3 arguments: 
