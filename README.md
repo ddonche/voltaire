@@ -12,7 +12,7 @@ All you have to do is add a column for reputation in your users table and let Vo
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'voltaire', '~> 0.3.0'
+gem 'voltaire', '~> 0.4.5'
 ```
 
 And then execute:
@@ -43,14 +43,29 @@ rails db:migrate
 
 ## Implementing Voltaire's Powerful Mechanism
 
-Now you're ready to roll. Voltaire has two methods you can call to increase or decrease the user's reputation score.
-It requires 3 arguments: amount (the amount you want to increase or decrease by), reputation (the database column 
-you want to alter), and user (the user or item whose points will be increased).
+Now you're ready to roll. Voltaire has a couple different ways you can increase or decrease the user's reputation score. One method 
+is incremental, and is intended for high-volume actions that increase scores by smaller amounts. 
 
-_Note: if you are using any model other than users, you will need to use the_ ```voltaire_up_other``` and ```voltaire_down_other``` _methods_ 
+_Note that with any of the minus/plus 
+methods, the record is updated by 1 for whatever amount you specify, so if you put that you want a user's score to increase by 100 for 
+something, the database will be hit 100 times. For larger amounts, use the up/down methods instead._
+
+To recap:
++incrementing and decrementing by 1 or a small number, use the *plus* or *minus* methods below; _this way guards against concurrency_
++increasing and decreasing by larger amounts for rarer actions or if you don't care about concurrency, user *up* and *down* methods below
+
+Whichever of the two ways you decide to use, the parameters are the same:
+Each method takes 3 arguments: 
+*_amount_ (the amount you want to increase or decrease by)
+*_reputation_ (the database column you want to alter)
+*_user_ (the user or item whose points will be increased)
+
+_Note: if you are using any model other than users, you will need to use the_ ```voltaire_plus_other``` , ```voltaire_minus_other```, ```voltaire_up_other``` and ```voltaire_down_other``` _methods_ 
 _(instructions farther down)._
 
-The two methods are
+
+##Larger Amounts
+Use ```voltaire_up``` and ```voltaire_down``` methods for larger amounts and if you don't worry about concurrency issues. 
 
 ```
 voltaire_up(amount, reputation, user)
@@ -60,6 +75,21 @@ and
 ```
 voltaire_down(amount, reputation, user)
 ```
+
+##Increments/Decrements of 1 or Smaller Amounts
+Use ```voltaire_plus``` and ```voltaire_minus``` methods for smaller amounts or if have concurrency issues. These will hit the database
+multiple times.
+
+```
+voltaire_plus(amount, reputation, user)
+```
+and
+
+```
+voltaire_minus(amount, reputation, user)
+```
+
+#Implementation and Examples
 To implement it, simply call the method you want in your controller and pass in the parameters. 
 
 ## Examples
@@ -67,20 +97,21 @@ To implement it, simply call the method you want in your controller and pass in 
 Here is an implementation of the [acts_as_votable](https://github.com/ryanto/acts_as_votable) gem, which allows users to 
 upvote or downvote comments. In the comments_controller.rb file, we pass in our method where we want Voltaire to go to 
 town. In the example below, when a user upvotes a comment, the user who made the comment will have their _karma_ increase 
-by 1, as karma is the database column in this example. 
+by 1, as karma is the database column in this example. Because it is incrementing and decrementing by 1, and because lots of
+users can potentially upvote and downvote simultaneously, we are using the concurrent safe versions:
 
 _comments_controller.rb_
 
 ```ruby
 def upvote
   @comment.upvote_by current_user
-  voltaire_up(1, :karma, @comment.user_id)
+  voltaire_plus(1, :karma, @comment.user_id)
   redirect_to :back
 end
 
 def downvote
   @comment.downvote_by current_user
-  voltaire_down(1, :karma, @comment.user_id)
+  voltaire_minus(1, :karma, @comment.user_id)
   redirect_to :back
 end
 ```
@@ -102,7 +133,8 @@ _index.html.erb_
 
 ## More Examples
 Here we have set up an easy way to toggle an article and make it featured. Any time a user's article gets featured, we have
-Voltaire increase their _reputation_ by 20 points. 
+Voltaire increase their _reputation_ by 250 points. Because an article being featured is a rarer occasion, and because we don't
+feel like hitting our database 250 times for this, we use the up/down method.
 
 _articles_controller.rb_
 
@@ -148,6 +180,10 @@ system on the world, we can easily see which ones are more fleshed out. The meth
 voltaire_up_other(amount, reputation, user, other)
   
 voltaire_down_other(amount, reputation, user, other)
+
+voltaire_plus_other(amount, reputation, user, other)
+  
+voltaire_minus_other(amount, reputation, user, other)
 ```
 
 The fourth parameter, other, indicates the class. In this case, it would be ```World```. _This parameter needs to be uppercase._
@@ -159,7 +195,7 @@ The fourth parameter, other, indicates the class. In this case, it would be ```W
 
     respond_to do |format|
       if @city.save
-        voltaire_up_other(1, :score, @city.world_id, World)
+        voltaire_plus_other(1, :score, @city.world_id, World)
         format.html { redirect_to @city, notice: 'City was successfully created.' }
       else
         format.html { render :new }
