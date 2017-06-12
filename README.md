@@ -141,11 +141,11 @@ _articles_controller.rb_
 def toggle_feature
   if @article.standard?
     @article.featured!
-    voltaire_up(20, :reputation, @article.user_id)
+    voltaire_up(250, :reputation, @article.user_id)
     
   elsif @article.featured?
     @article.standard!
-    voltaire_down(20, :reputation, @article.user_id)
+    voltaire_down(250, :reputation, @article.user_id)
   end
   
   redirect_to article_path(@article), notice: 'Article status has been updated.'
@@ -171,7 +171,7 @@ end
 ```
 
 # Something Besides Users
-If you want to implement a score system on some other than users, you will need to pass that in to the method as a fourth parameter.
+If you want to implement a score system on something other than users, you will need to pass that in as a fourth parameter.
 In the example below, there is a World class for an app that helps writers create new worlds. If we implement a scoring 
 system on the world, we can easily see which ones are more fleshed out. The methods in this case will look like this:
 
